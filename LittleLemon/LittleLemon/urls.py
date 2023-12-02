@@ -14,12 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-#update URLConf by including URL patterns of restaurant app
+
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from Restaurant import views  # Adjust the import based on your project structure
 
+router = DefaultRouter()
+router.register(r'tables', views.BookingViewSet, basename='tables')
 
 urlpatterns = [
-   path('admin/', admin.site.urls),
-   path('Restaurant/', include('Restaurant.urls')),
+    path('admin/', admin.site.urls),
+    path('restaurant/', include('Restaurant.urls')),
+    path('restaurant/menu/', include('Restaurant.urls')),
+    path('restaurant/booking/', include(router.urls)),
 ]
