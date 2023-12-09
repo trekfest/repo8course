@@ -15,17 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from Restaurant import views  # Adjust the import based on your project structure
+from Restaurant import views
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
 router.register(r'tables', views.BookingViewSet, basename='tables')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('restaurant/', include('Restaurant.urls')),
-    path('restaurant/menu/', include('Restaurant.urls')),
-    path('restaurant/booking/', include(router.urls)),
+    path('restaurant/', include('Restaurant.urls')),  # Assuming this includes other restaurant-specific URLs
+    path('api/', include(('Restaurant.urls', 'api'), namespace='api')),  # Use a 2-tuple with the app_name
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('api-token-auth/', obtain_auth_token),
 ]
